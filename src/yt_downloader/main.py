@@ -13,12 +13,14 @@ def download_multiple_videos(channels,end):
         "subtitleslangs": ["en","ja"],
         "subtitlesformat": "best",
         "writeautomaticsub": True,
+        "embedsubtitles": True,
         "playliststart": 1,
         "playlistend": end,
         "format": "bestvideo+bestaudio",
         "outtmpl": "downloads/%(title)s.%(ext)s",
         "download_archive": "downloaded.txt",
         "ignoreerrors":True
+
 
     }
 
