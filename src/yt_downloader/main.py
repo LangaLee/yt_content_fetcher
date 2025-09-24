@@ -18,6 +18,7 @@ def download_multiple_videos(channels,end):
         "format": "bestvideo+bestaudio",
         "outtmpl": "downloads/%(title)s.%(ext)s",
         "download_archive": "downloaded.txt",
+        "ignoreerrors":True
 
     }
 
