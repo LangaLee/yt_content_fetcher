@@ -9,6 +9,10 @@ with open("../../subs.txt","r") as f:
 def download_multiple_videos(channels,end):
     urls = [f"{chan}/videos" for chan in channels]
     ydl_options = {
+        "writesubtitles":True,
+        "subtitleslangs": ["en","ja"],
+        "subtitlesformat": "best",
+        "writeautomaticsub": True,
         "playliststart": 1,
         "playlistend": end,
         "format": "bestvideo+bestaudio",
@@ -28,6 +32,10 @@ def download_video(url):
         info = ydl.extract_info(url, download=False)
 
     ydl_options = {
+        "writesubtitles":True,
+        "subtitleslangs": ["en","ja"],
+        "subtitlesformat": "best",
+        "writeautomaticsub": True,
         "format": "bestvideo+bestaudio",
         "outtmpl": f"downloads/{info.get("title")}"
     }
