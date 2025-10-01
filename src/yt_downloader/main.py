@@ -1,78 +1,35 @@
 import yt_dlp
-import questionary
+
+CHANNEL_FOLDERS = {
+    "https://www.youtube.com/@AfterDark": "/media/youtube/AfterDark/Season 01",
+    "https://www.youtube.com/@KaiLentit": "/media/youtube/Kai Lentit/Season 01",
+    "https://www.youtube.com/@Livakivi": "/media/youtube/Livakivi/Season 01",
+    "https://www.youtube.com/@NERDULT": "/media/youtube/NERDULT/Season 01",
+    "https://www.youtube.com/@Nghtshtrs": "/media/youtube/Nghtshtrs/Season 01",
+    "https://www.youtube.com/@Nightride": "/media/youtube/Nightride/Season 01",
+    "https://www.youtube.com/@NPRMusic": "/media/youtube/NPR Music/Season 01",
+    "https://www.youtube.com/@The_FirstTake": "/media/youtube/The First Take/Season 01",
+}
+
+def download_multiple_videos():
+    for chan, folder in CHANNEL_FOLDERS.items():
+
+        ydl_options = {
+            "writesubtitles":True,
+            "subtitleslangs": ["en","ja"],
+            "subtitlesformat": "best",
+            "writeautomaticsub": True,
+            "embedsubtitles": True,
+            "playliststart": 1,
+            "playlistend": 5,
+            "format": "bestvideo+bestaudio",
+            "outtmpl": f"{folder}/%(upload_date>%Y-%m-%d)s - %(title).200B.%(ext)s",
+            "download_archive": "downloaded.txt",
+            "ignoreerrors":True
+        }
+        print(ydl_options["outtmpl"])
+        with yt_dlp.YoutubeDL(ydl_options) as ydl:
+            ydl.download(chan)
 
 
-with open("../../subs.txt","r") as f:
-    usual_suspects = f.read().split("\n")
-
-
-def download_multiple_videos(channels,end):
-    urls = [f"{chan}/videos" for chan in channels]
-    ydl_options = {
-        "writesubtitles":True,
-        "subtitleslangs": ["en","ja"],
-        "subtitlesformat": "best",
-        "writeautomaticsub": True,
-        "embedsubtitles": True,
-        "playliststart": 1,
-        "playlistend": end,
-        "format": "bestvideo+bestaudio",
-        "outtmpl": "downloads/%(title)s.%(ext)s",
-        "download_archive": "downloaded.txt",
-        "ignoreerrors":True
-
-
-    }
-
-    with yt_dlp.YoutubeDL(ydl_options) as ydl:
-        ydl.download(urls)
-
-
-
-def download_video(url):
-
-    with yt_dlp.YoutubeDL({}) as ydl:
-        info = ydl.extract_info(url, download=False)
-
-    ydl_options = {
-        "writesubtitles":True,
-        "subtitleslangs": ["en","ja"],
-        "subtitlesformat": "best",
-        "writeautomaticsub": True,
-        "format": "bestvideo+bestaudio",
-        "outtmpl": f"downloads/{info.get("title")}"
-    }
-    with yt_dlp.YoutubeDL(ydl_options) as ydl:
-        ydl.download(url)
-
-
-def update_library():
-    choice = questionary.select(
-        "Donwload multiple or single",
-        choices=["single", "multiple","update"]
-    ).ask()
-    
-    yt_link = input("please enter video or channel link here: \n")
-
-
-    # making sure that we just get the pure channel link so we can save it later
-    if yt_link.endswith("/videos"):
-        yt_link = f"{yt_link[:yt_link.rfind("/videos")]}\n"
-
-    if choice == "single":
-        download_video(yt_link)
-    elif choice == "multiple":
-        end = input("num of videos: \n")
-        download_multiple_videos([yt_link],int(end))
-        if yt_link in usual_suspects:
-            print("channel already recorded")
-            return
-        with open("../../subs.txt","a") as f:
-            f.write(yt_link)
-        
-            
-    elif choice == "update":
-        download_multiple_videos(usual_suspects,5)
-
-#https://www.youtube.com/playlist?list=UUuYLDxZWv-aal88czKkFvKA
-update_library()
+download_multiple_videos()
